@@ -228,6 +228,10 @@ var hello = () async {
 
 
 class PasswordInputField extends StatefulWidget {
+  final ValueChanged<String> onChanged; // Add onChanged property
+
+  PasswordInputField({required this.onChanged});
+
   @override
   _PasswordInputFieldState createState() => _PasswordInputFieldState();
 }
@@ -244,21 +248,22 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
   @override
   Widget build(BuildContext context) {
     return Align(
-  alignment: AlignmentDirectional(0.00, -0.34),
-  child: Padding(
-    padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
-    child: Container(
-      width: 320,
-      child: TextFormField(
-        autofocus: true,
-        textInputAction: TextInputAction.go,
-        obscureText: _obscurePassword, // This controls password visibility
-        decoration: InputDecoration(
-          labelText: 'Type Your Password',
-          labelStyle: TextStyle(
-            fontFamily: 'Readex Pro',
-            color: Color(0xFF7B7B7B),
-          ),
+      alignment: AlignmentDirectional(0.00, -0.34),
+      child: Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+        child: Container(
+          width: 320,
+          child: TextFormField(
+            autofocus: true,
+            textInputAction: TextInputAction.go,
+            obscureText: _obscurePassword,
+            onChanged: widget.onChanged, // Use the onChanged property
+            decoration: InputDecoration(
+              labelText: 'Type Your Password',
+              labelStyle: TextStyle(
+                fontFamily: 'Readex Pro',
+                color: Color(0xFF7B7B7B),
+              ),
           enabledBorder: UnderlineInputBorder(
             borderSide: BorderSide(
               color: Colors.white,
@@ -299,12 +304,13 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
             ),
             onPressed: _togglePasswordVisibility,
           ),
-          // Set the text color to white
+        
           hintStyle: TextStyle(color: Colors.white),
-          // Set the text color to white
+        
           //labelStyle: TextStyle(color: Colors.white),
         ),
-        style: TextStyle(color: Colors.white), // Set the text color to white
+        style: TextStyle(color: Colors.white), 
+       
       ),
     ),
   ),
@@ -317,22 +323,36 @@ class _PasswordInputFieldState extends State<PasswordInputField> {
 
 
 
-class Login_page extends StatelessWidget {
+class Login_page extends StatefulWidget {
   const Login_page({super.key});
+
+  @override
+  _Login_pageState createState() => _Login_pageState();
+}
+
+class _Login_pageState extends State<Login_page> {
+  String email = ""; // Variable to store email
+  String password = ""; // Variable to store password
+
 
   @override
   Widget build(BuildContext context) {
 
 
-  Future<void> loginAPI() async {
-    var client = http.Client();
-    try {
-      var response = await client.get(Uri.parse('https://flutter.dev/'));
-      print(response.body);
-    } finally {
-      client.close();
-    }
+
+Future<String> loginAPI(String username, String password) async {
+  var client = http.Client();
+  try {
+    var apiUrl = Uri.parse('http://127.0.0.1:8000/login_request?username=$username&password=$password');
+
+    var response = await client.get(apiUrl);
+    return response.body;
+  } finally {
+    client.close();
   }
+}
+
+
 
 
 var main_stack= Stack(children: [
@@ -345,9 +365,12 @@ var main_stack= Stack(children: [
               Align(
                 alignment: AlignmentDirectional(0.00, -0.1),
                 child: TextButton(
-                  onPressed: () {
-                    print('Main Button pressed ...');
-                  },
+                  onPressed: () async {
+
+                String apiResponse = await loginAPI(email, password);
+                print(apiResponse);
+                },
+
                   child: Text('LOGIN', style: TextStyle(
                           fontFamily: 'Mukta',
                           fontSize: 18,
@@ -440,6 +463,13 @@ var main_stack= Stack(children: [
                             color: Colors.white,
                           ),
                       keyboardType: TextInputType.emailAddress,
+                      
+                      
+                      onChanged: (value) {
+                      setState(() {
+                      email = value; 
+                      });
+                      },
                     ),
                   ),
                 ),
@@ -455,7 +485,11 @@ var main_stack= Stack(children: [
                       ),
                 ),
               ),
-              PasswordInputField(),
+              PasswordInputField( onChanged: (value) {
+      setState(() {
+        password = value; // Update the 'password' variable with entered text
+      });
+    },),
               Align(
                 alignment: AlignmentDirectional(-0.72, -0.42),
                 child: Text(
