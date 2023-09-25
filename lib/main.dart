@@ -12,6 +12,28 @@ home: Main(),
 ));}
 
 
+
+class Main extends StatelessWidget {
+  const Main({super.key});
+
+  @override
+
+  
+  Widget build(BuildContext context) {
+
+
+
+
+
+    return  MaterialApp(
+    home: Welcome_Screen()
+
+
+
+
+
+    );}}
+
 class  Welcome extends StatelessWidget {
   const Welcome({super.key});
 
@@ -87,9 +109,7 @@ var hello = () async {
 
                 alignment: AlignmentDirectional(0.00, 0.61),
                 child: TextButton(
-                  onPressed: () {
-                    print('Main Button pressed ...');
-                  },
+                  onPressed: () {Navigator.push(context,MaterialPageRoute(builder: (context) => const Login_page()),);},
                   child: Text('LOGIN', style: TextStyle(
                           fontFamily: 'Mukta',
                           fontSize: 18,
@@ -207,20 +227,104 @@ var hello = () async {
 
 
 
+class PasswordInputField extends StatefulWidget {
+  @override
+  _PasswordInputFieldState createState() => _PasswordInputFieldState();
+}
+
+class _PasswordInputFieldState extends State<PasswordInputField> {
+  bool _obscurePassword = true;
+
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscurePassword = !_obscurePassword;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+  alignment: AlignmentDirectional(0.00, -0.34),
+  child: Padding(
+    padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+    child: Container(
+      width: 320,
+      child: TextFormField(
+        autofocus: true,
+        textInputAction: TextInputAction.go,
+        obscureText: _obscurePassword, // This controls password visibility
+        decoration: InputDecoration(
+          labelText: 'Type Your Password',
+          labelStyle: TextStyle(
+            fontFamily: 'Readex Pro',
+            color: Color(0xFF7B7B7B),
+          ),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.white,
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.white,
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          errorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.red,
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          focusedErrorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.red,
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          prefixIcon: Icon(
+            Icons.lock_outlined,
+            color: Colors.white,
+            size: 25,
+          ),
+          suffixIcon: IconButton(
+            icon: Icon(
+              _obscurePassword ? Icons.visibility : Icons.visibility_off,
+              color: Colors.grey,
+            ),
+            onPressed: _togglePasswordVisibility,
+          ),
+          // Set the text color to white
+          hintStyle: TextStyle(color: Colors.white),
+          // Set the text color to white
+          //labelStyle: TextStyle(color: Colors.white),
+        ),
+        style: TextStyle(color: Colors.white), // Set the text color to white
+      ),
+    ),
+  ),
+);
+
+  }
+}
 
 
 
 
 
+class Login_page extends StatelessWidget {
+  const Login_page({super.key});
+
+  @override
+  Widget build(BuildContext context) {
 
 
-
-
-
-
-
-class Login {
-  Future<void> fetchFlutterDev() async {
+  Future<void> loginAPI() async {
     var client = http.Client();
     try {
       var response = await client.get(Uri.parse('https://flutter.dev/'));
@@ -229,78 +333,219 @@ class Login {
       client.close();
     }
   }
-}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class Main extends StatelessWidget {
-  const Main({super.key});
-
-  @override
-
-  
-  Widget build(BuildContext context) {
-
-
-
-
-
-    return  MaterialApp(
-    home: Welcome_Screen()
-
-
-
-
-
-    );}}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+var main_stack= Stack(children: [
     
+
+                  
+                  
+                  
+                  
+              Align(
+                alignment: AlignmentDirectional(0.00, -0.1),
+                child: TextButton(
+                  onPressed: () {
+                    print('Main Button pressed ...');
+                  },
+                  child: Text('LOGIN', style: TextStyle(
+                          fontFamily: 'Mukta',
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black
+                        ),),
+                  style: TextButton.styleFrom(
+                    minimumSize: Size(275, 40),
+                    backgroundColor: Color(0xFFE0DBDB),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)
+                    ),),),),
+                  
+
+
+
+              Align(
+                alignment: AlignmentDirectional(0.00, 0.03),
+                child: OutlinedButton(
+                  onPressed: () {
+                    print("sign up button pressed");
+                  },
+                  child: Text('Dont Have Account?  -Sign Up', style: TextStyle(
+                          fontFamily: 'Mukta',
+                          fontSize: 9.5,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.white
+                        ),),
+                  style: OutlinedButton.styleFrom(
+                    minimumSize: Size(275, 40),
+                    backgroundColor: Color.fromARGB(255, 0, 0, 0),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)
+                    ),)),),
+    
+              Align(
+                alignment: AlignmentDirectional(0.00, -0.60),
+                child: Padding(
+                  padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                  child: Container(
+                    width: 320,
+                    child: TextFormField(
+                      autofocus: true,
+                      autofillHints: [AutofillHints.email],
+                      textCapitalization: TextCapitalization.none,
+                      textInputAction: TextInputAction.next,
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        labelText: 'Type your Email Address ',
+                        labelStyle:
+                            TextStyle(
+                                  fontFamily: 'Readex Pro',
+                                  color: Color(0xFF7B7B7B),
+                                  fontWeight: FontWeight.normal,
+                                ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 3,
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.white,
+                            width: 3,
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        errorBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.red,
+                            width: 3,
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        focusedErrorBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.red,
+                            width: 3,
+                          ),
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        prefixIcon: Icon(
+                          Icons.email_outlined,
+                          color: Colors.white,
+                          size: 25,
+                        ),
+                      ),
+                      style: TextStyle(
+                            fontFamily: 'Readex Pro',
+                            color: Colors.white,
+                          ),
+                      keyboardType: TextInputType.emailAddress,
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: AlignmentDirectional(-0.72, -0.68),
+                child: Text(
+                  'Email Address ',
+                  style: TextStyle(
+                        fontFamily: 'Readex Pro',
+                        color: Colors.white,
+                        fontSize: 15,
+                      ),
+                ),
+              ),
+              PasswordInputField(),
+              Align(
+                alignment: AlignmentDirectional(-0.72, -0.42),
+                child: Text(
+                  'Password',
+                  style: TextStyle(
+                        fontFamily: 'Readex Pro',
+                        color: Colors.white,
+                        fontSize: 15,
+                      ),
+                ),
+              ),
+              Align(
+                alignment: AlignmentDirectional(0.00, -0.9),
+                child: Text(
+                  'Login',
+                  style: TextStyle(
+                        fontFamily: 'Outfit',
+                        color: Colors.white,
+                        fontSize: 30,
+                      ),
+                ),
+              ),
+            ],
+          );
+
+
+    return Scaffold(backgroundColor: Colors.black, body: main_stack,);
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
