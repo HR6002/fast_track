@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'dart:async';
+import 'package:http/http.dart' as http; 
+
 
 
 
 
 main(){ runApp(const MaterialApp( 
 title: "Fats Track", 
-home: Login(),
+home: Main(),
 ));}
 
 
@@ -65,9 +67,19 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
     super.initState();
   }
 
+
+var hello = () async {
+  var client = http.Client();
+  try {
+    var response = await client.get(Uri.parse('https://flutter.dev/'));
+    print(response.body);
+  } finally {
+    client.close();
+  }
+};
   @override
   Widget build(BuildContext context) {
-    var Login_signUp_Screen= Stack(
+    var Main_signUp_Screen= Stack(
             children: [
               
 
@@ -76,7 +88,7 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
                 alignment: AlignmentDirectional(0.00, 0.61),
                 child: TextButton(
                   onPressed: () {
-                    print('Button pressed ...');
+                    print('Main Button pressed ...');
                   },
                   child: Text('LOGIN', style: TextStyle(
                           fontFamily: 'Mukta',
@@ -99,7 +111,7 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
                 alignment: AlignmentDirectional(0.00, 0.75),
                 child: TextButton(
                   onPressed: () {
-                    print('Button pressed ...');
+                    print(hello());
                   },
                   child: Text('SIGN UP', style: TextStyle(
                           fontFamily: 'Mukta',
@@ -178,7 +190,7 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
 
 
             Visibility(
-              child: Login_signUp_Screen,
+              child: Main_signUp_Screen,
               visible: _start == 0 ? true : false,
             ),
 
@@ -189,6 +201,33 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
         ),
       ),
     );
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+class Login {
+  Future<void> fetchFlutterDev() async {
+    var client = http.Client();
+    try {
+      var response = await client.get(Uri.parse('https://flutter.dev/'));
+      print(response.body);
+    } finally {
+      client.close();
+    }
   }
 }
 
@@ -223,34 +262,14 @@ class _Welcome_ScreenState extends State<Welcome_Screen> {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-class Login extends StatelessWidget {
-  const Login({super.key});
+class Main extends StatelessWidget {
+  const Main({super.key});
 
   @override
 
   
   Widget build(BuildContext context) {
-    var hello=  Text("HELLO");
-    var MainLogo =Image.asset('Assets/images/Logo_animated.gif');
-    var Login    = TextButton(onPressed: null, child:  Container( alignment: Alignment.center, child: Text("Log In", style: TextStyle(color: Colors.black, fontSize: 15, letterSpacing: 4), ),width: 140, height: 35,), style: TextButton.styleFrom(backgroundColor: Colors.white), );
-    var Sign_Up  = OutlinedButton(onPressed: null, child: Text("Sign Up",),);
 
-    var Button_Column=  Column(children: [Login, Sign_Up] ,);
 
 
 
