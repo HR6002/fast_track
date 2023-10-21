@@ -146,19 +146,11 @@ var hello = () async {
                     ),)),),
 
 
-             Align(
-                alignment: AlignmentDirectional(-1.30, -1.04),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(
-                    'Assets/images/Logo.png',
-                    width: 200,
-                    fit: BoxFit.cover,
-                  ),),),
+
 
 
               Align(
-                alignment: AlignmentDirectional(-0.85, -0.48),
+                alignment: AlignmentDirectional(-0.0, -0.2),
                 child: Text(
                   'Hello!',
                   textAlign: TextAlign.center,
@@ -170,7 +162,7 @@ var hello = () async {
                       ),),),
 
               Align(
-                alignment: AlignmentDirectional(-0.78, -0.29),
+                alignment: AlignmentDirectional(-0.0, -0.1),
                 child: Text(
                   'Welcome,',
                   style: TextStyle(
@@ -284,7 +276,7 @@ var main_stack= Stack(children: [
                   
                   
               Align(
-                alignment: AlignmentDirectional(0.00, -0.1),
+                alignment: AlignmentDirectional(0.00, 0.14),
                 child: TextButton(
                   onPressed: () async {
                   if (_formKey.currentState != null && _formKey.currentState!.validate() || _formKey1.currentState != null && _formKey1.currentState!.validate()) {
@@ -334,7 +326,7 @@ var main_stack= Stack(children: [
 
 
               Align(
-                alignment: AlignmentDirectional(0.00, 0.03),
+                alignment: AlignmentDirectional(0.00, 0.35),
                 child: OutlinedButton(
                   onPressed: () {
                     print("sign up button pressed");
@@ -452,7 +444,7 @@ var main_stack= Stack(children: [
                     ),
 
               Align(
-                alignment: AlignmentDirectional(-0.72, -0.68),
+                alignment: AlignmentDirectional(-0.72, -0.44),
                 child: Text(
                   'Email Address ',
                   style: TextStyle(
@@ -570,7 +562,7 @@ Align(
                 ),
               ),
               Align(
-                alignment: AlignmentDirectional(0.00, -0.9),
+                alignment: AlignmentDirectional(0.00, -0.66),
                 child: Text(
                   'Login',
                   style: TextStyle(
