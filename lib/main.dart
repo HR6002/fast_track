@@ -227,97 +227,7 @@ var hello = () async {
 
 
 
-class PasswordInputField extends StatefulWidget {
-  final ValueChanged<String> onChanged; // Add onChanged property
 
-  PasswordInputField({required this.onChanged});
-
-  @override
-  _PasswordInputFieldState createState() => _PasswordInputFieldState();
-}
-
-class _PasswordInputFieldState extends State<PasswordInputField> {
-  bool _obscurePassword = true;
-
-  void _togglePasswordVisibility() {
-    setState(() {
-      _obscurePassword = !_obscurePassword;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Align(
-      alignment: AlignmentDirectional(0.00, -0.34),
-      child: Padding(
-        padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
-        child: Container(
-          width: 320,
-          child: TextFormField(
-            autofocus: true,
-            textInputAction: TextInputAction.go,
-            obscureText: _obscurePassword,
-            onChanged: widget.onChanged, // Use the onChanged property
-            decoration: InputDecoration(
-              labelText: 'Type Your Password',
-              labelStyle: TextStyle(
-                fontFamily: 'Readex Pro',
-                color: Color(0xFF7B7B7B),
-              ),
-          enabledBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.white,
-              width: 3,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.white,
-              width: 3,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          errorBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.red,
-              width: 3,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          focusedErrorBorder: UnderlineInputBorder(
-            borderSide: BorderSide(
-              color: Colors.red,
-              width: 3,
-            ),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          prefixIcon: Icon(
-            Icons.lock_outlined,
-            color: Colors.white,
-            size: 25,
-          ),
-          suffixIcon: IconButton(
-            icon: Icon(
-              _obscurePassword ? Icons.visibility : Icons.visibility_off,
-              color: Colors.grey,
-            ),
-            onPressed: _togglePasswordVisibility,
-          ),
-        
-          hintStyle: TextStyle(color: Colors.white),
-        
-          //labelStyle: TextStyle(color: Colors.white),
-        ),
-        style: TextStyle(color: Colors.white), 
-       
-      ),
-    ),
-  ),
-);
-
-  }
-}
 
 
 
@@ -331,8 +241,17 @@ class Login_page extends StatefulWidget {
 }
 
 class _Login_pageState extends State<Login_page> {
+  bool isError = false;
   String email = ""; // Variable to store email
   String password = ""; // Variable to store password
+  final _formKey = GlobalKey<FormState>();
+  final _formKey1 = GlobalKey<FormState>();
+  bool _obscurePassword =true;
+  void _togglePasswordVisibility() {
+    setState(() {
+      _obscurePassword = !_obscurePassword;
+    });
+  }
 
 
   @override
@@ -355,6 +274,8 @@ Future<String> loginAPI(String username, String password) async {
 
 
 
+
+
 var main_stack= Stack(children: [
     
 
@@ -366,10 +287,36 @@ var main_stack= Stack(children: [
                 alignment: AlignmentDirectional(0.00, -0.1),
                 child: TextButton(
                   onPressed: () async {
+                  if (_formKey.currentState != null && _formKey.currentState!.validate() || _formKey1.currentState != null && _formKey1.currentState!.validate()) {
+                    
+                    String apiResponse = await loginAPI(email, password);
+                    print("api response is: $apiResponse");
+                    if (apiResponse == 'false') {
+                      setState(() {
+                        isError = true; 
+                        print("isError variable is: $isError");
+                      });
+                    } else {
+                     
+                        print("isError variable is: $isError");
+                      
+                    }
 
-                String apiResponse = await loginAPI(email, password);
-                print(apiResponse);
-                },
+                    if (_formKey.currentState!.validate() || _formKey1.currentState!.validate()) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text("processing Data")),
+                      );
+                    }
+                  }
+                  print("button has been pressed");
+
+                 
+                }
+
+                ,
+
+
+
 
                   child: Text('LOGIN', style: TextStyle(
                           fontFamily: 'Mukta',
@@ -404,76 +351,106 @@ var main_stack= Stack(children: [
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)
                     ),)),),
     
-              Align(
-                alignment: AlignmentDirectional(0.00, -0.60),
-                child: Padding(
-                  padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
-                  child: Container(
-                    width: 320,
-                    child: TextFormField(
-                      autofocus: true,
-                      autofillHints: [AutofillHints.email],
-                      textCapitalization: TextCapitalization.none,
-                      textInputAction: TextInputAction.next,
-                      obscureText: false,
-                      decoration: InputDecoration(
-                        labelText: 'Type your Email Address ',
-                        labelStyle:
-                            TextStyle(
+                    Align(
+                      alignment: AlignmentDirectional(0.00, -0.60),
+                      child: Form(
+                        key: _formKey1,
+                        autovalidateMode: isError ? AutovalidateMode.always : AutovalidateMode.onUserInteraction,
+                        child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+                          child: Container(
+                            width: 320,
+                            child: TextFormField(
+                              validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please Fill in the form correctly!";
+                              }
+                              else if (isError) {
+                                return "Email address or password is incorrect";
+                              }
+
+
+                              return null;
+                            },
+                             onChanged: (value) {
+                                setState(() {
+                                  email = value;
+                                });
+                                if (isError){
+                                 setState(() {
+                                isError = false; 
+                        
+                      });}
+                              },
+                              autofocus: true,
+                              autofillHints: [AutofillHints.email],
+                              textCapitalization: TextCapitalization.none,
+                              textInputAction: TextInputAction.next,
+                              obscureText: false,
+                              decoration: InputDecoration(
+                                labelText: 'Type your Email Address ',
+                                labelStyle: TextStyle(
                                   fontFamily: 'Readex Pro',
                                   color: Color(0xFF7B7B7B),
                                   fontWeight: FontWeight.normal,
                                 ),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 3,
+                                enabledBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                    width: 3,
+                                  ),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                errorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: isError ? Colors.red : Colors.white,
+                                    width: 3,
+                                  ),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                focusedErrorBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: isError ? Colors.red : Colors.white,
+                                    width: 3,
+                                  ),
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                focusedBorder: UnderlineInputBorder(
+                                  borderSide: BorderSide(
+                                    color: Colors.white,
+                                    width: 3,
+                                  ),
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.email_outlined,
+                                  color: Colors.white,
+                                  size: 25,
+                                ),
+                              ),
+                              style: TextStyle(
+                                fontFamily: 'Readex Pro',
+                                color: Colors.white,
+                              ),
+                              keyboardType: TextInputType.emailAddress,
+
+                            ),
                           ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.white,
-                            width: 3,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        errorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.red,
-                            width: 3,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        focusedErrorBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.red,
-                            width: 3,
-                          ),
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        prefixIcon: Icon(
-                          Icons.email_outlined,
-                          color: Colors.white,
-                          size: 25,
                         ),
                       ),
-                      style: TextStyle(
-                            fontFamily: 'Readex Pro',
-                            color: Colors.white,
-                          ),
-                      keyboardType: TextInputType.emailAddress,
-                      
-                      
-                      onChanged: (value) {
-                      setState(() {
-                      email = value; 
-                      });
-                      },
                     ),
-                  ),
-                ),
-              ),
+                    Align(
+                      alignment: AlignmentDirectional(-0.72, -0.68),
+                      child: Text(
+                        'Email Address ',
+                        style: TextStyle(
+                          fontFamily: 'Readex Pro',
+                          color: Colors.white,
+                          fontSize: 15,
+                        ),
+                      ),
+                    ),
+
               Align(
                 alignment: AlignmentDirectional(-0.72, -0.68),
                 child: Text(
@@ -485,13 +462,104 @@ var main_stack= Stack(children: [
                       ),
                 ),
               ),
-              PasswordInputField( onChanged: (value) {
-      setState(() {
-        password = value; // Update the 'password' variable with entered text
-      });
-    },),
+
+Align(
+      alignment: AlignmentDirectional(0.00, -0.34),
+      child:  Form ( 
+        key: _formKey, 
+        autovalidateMode: isError ? AutovalidateMode.always : AutovalidateMode.onUserInteraction,
+        child:
+      
+      Padding(
+        padding: EdgeInsetsDirectional.fromSTEB(8, 0, 8, 0),
+        child: Container(
+          width: 320,
+          
+          child: TextFormField(
+            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Please Fill in the form correctly!";
+                              }
+                              if (isError) {
+                                return "Email address or password is incorrect";
+                              }
+                              return null;
+                            },
+
+            autofocus: true,
+            textInputAction: TextInputAction.go,
+            obscureText: _obscurePassword,
+            onChanged: (value) {
+                                setState(() {
+                                  password = value;
+                                });
+
+                                if (isError){
+                                 setState(() {
+                        isError = false; 
+                        
+                      });}
+
+                              }, 
+            decoration: InputDecoration(
+              labelText: 'Type Your Password',
+              labelStyle: TextStyle(
+                fontFamily: 'Readex Pro',
+                color: Color(0xFF7B7B7B),
+              ),
+          enabledBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.white,
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          focusedBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: Colors.white,
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          errorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: isError? Colors.red: Colors.white,
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          focusedErrorBorder: UnderlineInputBorder(
+            borderSide: BorderSide(
+              color: isError? Colors.red: Colors.white,
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          prefixIcon: Icon(
+            Icons.lock_outlined,
+            color: Colors.white,
+            size: 25,
+          ),
+          suffixIcon: IconButton(
+            icon: Icon(
+              _obscurePassword ? Icons.visibility : Icons.visibility_off,
+              color: Colors.grey,
+            ),
+            onPressed: _togglePasswordVisibility,
+          ),
+        
+          hintStyle: TextStyle(color: Colors.white),
+        
+          //labelStyle: TextStyle(color: Colors.white),
+        ),
+        style: TextStyle(color: Colors.white), 
+       
+      ),
+    ),
+      )),
+),
               Align(
-                alignment: AlignmentDirectional(-0.72, -0.42),
+                alignment: AlignmentDirectional(-0.82, -0.42),
                 child: Text(
                   'Password',
                   style: TextStyle(
